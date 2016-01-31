@@ -54,14 +54,29 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     @IBAction func AddPin(sender: UILongPressGestureRecognizer) {
         
-        let location = sender.locationInView(self.mapView)
-        let loCoord = self.mapView.convertPoint(location, toCoordinateFromView: self.mapView)
-        let annotation = MKPointAnnotation()
+        if(sender.state == UIGestureRecognizerState.Began) {
+            // Do Beginning work here when finger is intially pressed
+            print("Long press Began")
+            
+            let location = sender.locationInView(self.mapView)
+            let pinCoord = self.mapView.convertPoint(location, toCoordinateFromView: self.mapView)
+            let annotation = MKPointAnnotation()
+            
+            annotation.coordinate = pinCoord
+            annotation.title = "Pin"
+            self.mapView.addAnnotation(annotation)
+            print(pinCoord.latitude, pinCoord.longitude)
         
-        annotation.coordinate = loCoord
-        annotation.title = "Pin"
+        }
+        if (sender.state == UIGestureRecognizerState.Began) {
+            // Do repeated work here (repeats continuously) while finger is down
+            print("Changed press detected.")
+        }
+        else if (sender.state == UIGestureRecognizerState.Ended) {
+            // Do end work here when finger is lifted
+            print("Long press detected.")
+        }
         
-        self.mapView.addAnnotation(annotation)
         
     }
     
