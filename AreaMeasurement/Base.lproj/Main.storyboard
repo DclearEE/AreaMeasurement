@@ -35,7 +35,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.10000000000000001" id="DNp-Jj-XGZ">
                     <connections>
-                        <action selector="AddPin:" destination="BYZ-38-t0r" id="rrg-Lo-5HJ"/>
+                        <action selector="addPin:" destination="BYZ-38-t0r" id="iuY-Is-rYC"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>

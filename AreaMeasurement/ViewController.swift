@@ -10,13 +10,13 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     
     @IBOutlet weak var mapView: MKMapView!
-    var pinAnnotationView:MKPinAnnotationView!
+    
     let locationManager = CLLocationManager()
-    var count = 0
+    var dragPin: MKPointAnnotation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
         self.mapView.showsUserLocation = true
-
+        
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "addPin:")
+        gestureRecognizer.numberOfTouchesRequired = 1
+        mapView.addGestureRecognizer(gestureRecognizer)
         
     }
     
@@ -52,44 +55,44 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         print("Error: " + error.localizedDescription)
     }
     
-    
-    @IBAction func AddPin(sender: UILongPressGestureRecognizer) {
-        
-        if(sender.state == UIGestureRecognizerState.Began) {
-            // Do Beginning work here when finger is intially pressed
-            print("Long press Began")
-            
-            let location = sender.locationInView(self.mapView)
-            let pinCoord = self.mapView.convertPoint(location, toCoordinateFromView: self.mapView)
-            let annotation = MKPointAnnotation()
-            self.pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-            
-            annotation.coordinate = pinCoord
-            annotation.title = "pin \(count + 1)"
-            count++
-            self.mapView.addAnnotation(annotation)
-            print(pinCoord.latitude, pinCoord.longitude)
-            
-        }
-        if (sender.state == UIGestureRecognizerState.Began) {
-            // Do repeated work here (repeats continuously) while finger is down
-            print("Changed press detected.")
-        }
-        else if (sender.state == UIGestureRecognizerState.Ended) {
-            // Do end work here when finger is lifted
-
-            print("Long press detected.")
+    func addPin(gestureRecognizer:UIGestureRecognizer){
+        let touchPoint = gestureRecognizer.locationInView(mapView)
+        let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+        if dragPin != nil {
+            dragPin.coordinate = newCoordinates
         }
         
-        
-        
+        if gestureRecognizer.state == UIGestureRecognizerState.Began {
+            dragPin = MKPointAnnotation()
+            dragPin.coordinate = newCoordinates
+            mapView.addAnnotation(dragPin)
+        } else if gestureRecognizer.state == UIGestureRecognizerState.Ended {
+            dragPin = nil
+        }
     }
-    func mapView(mapView: MKMapView,
-        viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
+    
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKPointAnnotation {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myPin")
+            
+            pinAnnotationView.pinTintColor = UIColor.purpleColor()
+            pinAnnotationView.animatesDrop = true
             pinAnnotationView.draggable = true
             pinAnnotationView.canShowCallout = true
+            
             return pinAnnotationView
-    
+
+        }
+        return nil
     }
+    //Does Nothing
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        let lat = view.annotation?.coordinate.latitude
+        let long = view.annotation?.coordinate.longitude
+        
+        print("Clic pin lat \(lat) long \(long)")
+        
+    }
+    
     
 }
