@@ -12,8 +12,6 @@ import CoreLocation
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
-    var pointAnnotation:MKPointAnnotation!
-    var pinAnnotationView:MKPinAnnotationView!
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -53,7 +51,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         print("Error: " + error.localizedDescription)
     }
     
-
+    
     @IBAction func AddPin(sender: UILongPressGestureRecognizer) {
         
         if(sender.state == UIGestureRecognizerState.Began) {
@@ -69,7 +67,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             annotation.title = "Pin"
             self.mapView.addAnnotation(annotation)
             print(pinCoord.latitude, pinCoord.longitude)
-        
+            
         }
         if (sender.state == UIGestureRecognizerState.Began) {
             // Do repeated work here (repeats continuously) while finger is down
@@ -81,14 +79,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
         
+        
     }
     
-    func mapView(mapView: MKMapView,
-        viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView?{
-            self.pinAnnotationView.draggable = true
-            self.pinAnnotationView.canShowCallout = true
-            return self.pinAnnotationView
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        switch (newState) {
+        case .Starting:
+            view.dragState = .Dragging
+        case .Ending, .Canceling:
+            view.dragState = .None
+        default: break
+        }
     }
-    
     
 }
