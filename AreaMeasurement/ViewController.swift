@@ -77,6 +77,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             pinAnnotationView.pinTintColor = UIColor.purpleColor()
             pinAnnotationView.animatesDrop = true
+            pinAnnotationView.draggable = true
+            pinAnnotationView.canShowCallout = true
             
             return pinAnnotationView
         }
@@ -91,53 +93,5 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
 
-    
-//    @IBAction func AddPin(sender: UILongPressGestureRecognizer) {
-//        
-//        if(sender.state == UIGestureRecognizerState.Began) {
-//            // Do Beginning work here when finger is intially pressed
-//            print("Long press Began")
-//            
-//            func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
-//                switch (newState) {
-//                case .Ending, .Canceling:
-//                    view.dragState = .None
-//                default: break
-//                }
-//                
-//            }
-//            let location = sender.locationInView(self.mapView)
-//            let pinCoord = self.mapView.convertPoint(location, toCoordinateFromView: self.mapView)
-//            let annotation = MKPointAnnotation()
-//            
-//            
-//            annotation.coordinate = pinCoord
-//            annotation.title = "Pin"
-//            self.mapView.addAnnotation(annotation)
-//            print(pinCoord.latitude, pinCoord.longitude)
-//            
-//        }
-//        if (sender.state == UIGestureRecognizerState.Began) {
-//            // Do repeated work here (repeats continuously) while finger is down
-//            print("Changed press detected.")
-//        }
-//        else if (sender.state == UIGestureRecognizerState.Ended) {
-//            // Do end work here when finger is lifted
-//            print("Long press detected.")
-//        }
-//        
-//        
-//        
-//    }
-//    
-//    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
-//        switch (newState) {
-//        case .Starting:
-//            view.dragState = .Dragging
-//        case .Ending, .Canceling:
-//            view.dragState = .None
-//        default: break
-//        }
-//    }
     
 }
